@@ -37,6 +37,10 @@ jobs:
             tag: molecule-ubuntu-22.04
           - dockerfile: molecule-ubuntu-24.04.Dockerfile
             tag: molecule-ubuntu-24.04
+          - dockerfile: molecule-ubuntu-22.04-systemd.Dockerfile
+            tag: molecule-ubuntu-22.04-systemd
+          - dockerfile: molecule-ubuntu-24.04-systemd.Dockerfile
+            tag: molecule-ubuntu-24.04-systemd
     
     steps:
       - name: Checkout repository
