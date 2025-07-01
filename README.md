@@ -6,6 +6,8 @@ This repository contains Docker images for testing and development environments.
 
 - **molecule-ubuntu-22.04**: Ubuntu 22.04 LTS with Python, Git, and development tools for Molecule testing
 - **molecule-ubuntu-24.04**: Ubuntu 24.04 LTS with Python, Git, and development tools for Molecule testing
+- **molecule-ubuntu-22.04-systemd**: Ubuntu 22.04 LTS with systemd init system and development tools for testing systemd services
+- **molecule-ubuntu-24.04-systemd**: Ubuntu 24.04 LTS with systemd init system and development tools for testing systemd services
 
 ## Automated Builds
 
@@ -25,9 +27,38 @@ docker pull ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/mole
 
 # For Ubuntu 24.04
 docker pull ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/molecule-ubuntu-24.04:latest
+
+# For Ubuntu 22.04 with systemd
+docker pull ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/molecule-ubuntu-22.04-systemd:latest
+
+# For Ubuntu 24.04 with systemd
+docker pull ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/molecule-ubuntu-24.04-systemd:latest
 ```
 
 Replace `$GITHUB_REPOSITORY` with the actual repository name (e.g., `username/container-images`).
+
+## Using Systemd Images
+
+The systemd images require special configuration to run properly. They need privileged mode and the cgroup filesystem mounted:
+
+```bash
+# Run Ubuntu 22.04 with systemd
+docker run -d --privileged --name test-systemd-22 \
+  -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
+  --cgroupns=host \
+  ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/molecule-ubuntu-22.04-systemd:latest
+
+# Run Ubuntu 24.04 with systemd
+docker run -d --privileged --name test-systemd-24 \
+  -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
+  --cgroupns=host \
+  ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/molecule-ubuntu-24.04-systemd:latest
+
+# Connect to the running container
+docker exec -it test-systemd-22 /bin/bash
+```
+
+**Note**: Systemd containers are primarily intended for testing systemd services and should be used with caution in production environments.
 
 ## Image Tags
 
